@@ -29,68 +29,66 @@ class AssetsTreeBloc extends Cubit<AssetsTreeState> {
     );
     final filteredNode = filterTree(
       state.initialRootNode!,
-      state.searchString,
-      state.filterType,
+      filterType: filterType,
     );
     emit(
-      AssetsTreeSuccess(
+      AssetsTreeFiltered(
         initialRootNode: state.initialRootNode,
-        currentRootNode: filteredNode,
+        filteredRootNode: filteredNode,
         filterType: state.filterType,
       ),
     );
   }
 
   TreeNodeModel? filterTree(
-    TreeNodeModel rootNode,
-    String? searchQuery,
+    TreeNodeModel node, {
     AssetFilterTypeEnum? filterType,
-  ) {
-    bool matchesFilter(TreeNodeModel node) {
-      if (searchQuery != null &&
-          !node.name.toLowerCase().contains(searchQuery.toLowerCase())) {
-        return false;
-      }
-      if (filterType == AssetFilterTypeEnum.energySensor &&
-          node is AssetNodeModel &&
-          node.sensorType != 'energy') {
-        return false;
-      }
-      if (filterType == AssetFilterTypeEnum.criticalStatus &&
-          node is AssetNodeModel &&
-          node.status != 'critical') {
-        return false;
-      }
-      return true;
+    String? searchString,
+  }) {
+    late final TreeNodeModel filteredNode;
+
+    if (node is AssetNodeModel) {
+      filteredNode = AssetNodeModel(
+        id: node.id,
+        name: node.name,
+        parentId: node.parentId,
+        sensorId: node.sensorId,
+        sensorType: node.sensorType,
+        status: node.status,
+        gatewayId: node.gatewayId,
+        locationId: node.locationId,
+        children: [],
+      );
+    } else if (node is LocationNodeModel) {
+      filteredNode = LocationNodeModel(
+        id: node.id,
+        name: node.name,
+        parentId: node.parentId,
+        children: [],
+      );
     }
 
-    List<TreeNodeModel> filteredChildren = rootNode.children
-        .map((child) => filterTree(child, searchQuery, filterType))
-        .where((child) => child != null)
-        .cast<TreeNodeModel>()
-        .toList();
+    bool matches = true;
 
-    if (matchesFilter(rootNode) || filteredChildren.isNotEmpty) {
-      if (rootNode is LocationNodeModel) {
-        return LocationNodeModel(
-          id: rootNode.id,
-          name: rootNode.name,
-          parentId: rootNode.parentId,
-        );
-      } else if (rootNode is AssetNodeModel) {
-        return AssetNodeModel(
-          id: rootNode.id,
-          name: rootNode.name,
-          parentId: rootNode.parentId,
-          locationId: rootNode.locationId,
-          sensorId: rootNode.sensorId,
-          sensorType: rootNode.sensorType,
-          status: rootNode.status,
-          gatewayId: rootNode.gatewayId,
-          children: filteredChildren,
-        );
+    if (filterType != null && filterType == AssetFilterTypeEnum.energySensor) {
+      matches = node is AssetNodeModel && node.sensorType == 'energy';
+    } else if (filterType != null &&
+        filterType == AssetFilterTypeEnum.criticalStatus) {
+      matches = node is AssetNodeModel && node.status == 'alert';
+    }
+
+    for (var child in node.children) {
+      var filteredChild = filterTree(
+        child,
+        filterType: filterType,
+        searchString: searchString,
+      );
+      if (filteredChild != null) {
+        filteredNode.children.add(filteredChild);
+        matches = true;
       }
     }
-    return null;
+
+    return matches ? filteredNode : null;
   }
 }

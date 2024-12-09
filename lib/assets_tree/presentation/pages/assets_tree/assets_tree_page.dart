@@ -215,19 +215,30 @@ class _AssetsTreePageState extends State<AssetsTreePage> {
             const SizedBox(height: 16),
             const Divider(height: 0),
             const SizedBox(height: 16),
-            BlocBuilder(
+            BlocBuilder<AssetsTreeBloc, AssetsTreeState>(
               bloc: _bloc,
               builder: (context, state) {
-                if (state is AssetsTreeLoading) {
+                final assetsState = state;
+                if (assetsState is AssetsTreeLoading) {
                   return const Center(
                     child: CircularProgressIndicator(
                       color: Color(0xFF17192D),
                     ),
                   );
                 }
-                if (state is AssetsTreeSuccess) {
+                if (assetsState is AssetsTreeSuccess) {
+                  final keyLabel = assetsState.hashCode.toString();
                   return TreeBranch(
-                    treeNode: state.currentRootNode ?? state.initialRootNode!,
+                    key:  Key(keyLabel),
+                    treeNode: assetsState.initialRootNode!,
+                  );
+                }
+                if (assetsState is AssetsTreeFiltered) {
+                  final keyLabel = assetsState.hashCode.toString();
+                  return TreeBranch(
+                    key: Key(keyLabel),
+                    treeNode: assetsState.filteredRootNode!,
+                    expandNodes: true,
                   );
                 }
                 return const SizedBox.shrink();

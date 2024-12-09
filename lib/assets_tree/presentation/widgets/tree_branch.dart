@@ -7,8 +7,13 @@ import 'package:tractian_test/core/utils/svg_icons.dart';
 
 class TreeBranch extends StatefulWidget {
   final TreeNodeModel treeNode;
+  final bool expandNodes;
 
-  const TreeBranch({super.key, required this.treeNode});
+  const TreeBranch({
+    super.key,
+    required this.treeNode,
+    this.expandNodes = false,
+  });
 
   @override
   State<TreeBranch> createState() => _TreeBranchState();
@@ -50,6 +55,7 @@ class _TreeBranchState extends State<TreeBranch> {
     }
 
     return ExpansionTile(
+      initiallyExpanded: widget.expandNodes,
       leading: SvgPicture.asset(_leadingAssetPath),
       title: Text(
         _treeNode.name,
@@ -60,7 +66,12 @@ class _TreeBranchState extends State<TreeBranch> {
         ),
       ),
       children: _treeNode.children
-          .map((childNode) => TreeBranch(treeNode: childNode))
+          .map(
+            (childNode) => TreeBranch(
+              treeNode: childNode,
+              expandNodes: widget.expandNodes,
+            ),
+          )
           .toList(),
     );
   }
