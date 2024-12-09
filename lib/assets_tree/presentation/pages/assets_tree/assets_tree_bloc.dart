@@ -77,6 +77,10 @@ class AssetsTreeBloc extends Cubit<AssetsTreeState> {
       matches = node is AssetNodeModel && node.status == 'alert';
     }
 
+    if (searchString != null && searchString.isNotEmpty) {
+      matches = node.name.contains(searchString);
+    }
+
     for (var child in node.children) {
       var filteredChild = filterTree(
         child,
