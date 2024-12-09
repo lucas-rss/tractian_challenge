@@ -1,0 +1,4 @@
+enum AssetFilterTypeEnum {
+  energySensor,
+  criticalStatus,
+}
