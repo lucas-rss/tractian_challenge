@@ -116,16 +116,23 @@ class AssetsTreeBloc extends Cubit<AssetsTreeState> {
     }
 
     bool matches = true;
+    bool filterBySubstring = searchString != null && searchString.isNotEmpty;
 
-    if (statusSensorFilter != null &&
-        statusSensorFilter == StatusSensorFilterEnum.energySensor) {
-      matches = node is AssetNodeModel && node.sensorType == 'energy';
-    } else if (statusSensorFilter != null &&
-        statusSensorFilter == StatusSensorFilterEnum.criticalStatus) {
-      matches = node is AssetNodeModel && node.status == 'alert';
-    }
-
-    if (searchString != null && searchString.isNotEmpty) {
+    if (statusSensorFilter != null) {
+      if (statusSensorFilter == StatusSensorFilterEnum.energySensor) {
+        matches = filterBySubstring
+            ? node is AssetNodeModel &&
+                node.sensorType == 'energy' &&
+                node.name.toLowerCase().contains(searchString.toLowerCase())
+            : node is AssetNodeModel && node.sensorType == 'energy';
+      } else if (statusSensorFilter == StatusSensorFilterEnum.criticalStatus) {
+        matches = filterBySubstring
+            ? node is AssetNodeModel &&
+                node.status == 'alert' &&
+                node.name.toLowerCase().contains(searchString.toLowerCase())
+            : node is AssetNodeModel && node.status == 'alert';
+      }
+    } else if (filterBySubstring) {
       matches = node.name.toLowerCase().contains(searchString.toLowerCase());
     }
 
