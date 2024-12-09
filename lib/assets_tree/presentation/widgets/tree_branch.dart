@@ -37,6 +37,7 @@ class _TreeBranchState extends State<TreeBranch> {
   Widget build(BuildContext context) {
     if (_treeNode.children.isEmpty) {
       return ListTile(
+        leading: SvgPicture.asset(_leadingAssetPath),
         title: Text(
           _treeNode.name,
           style: const TextStyle(

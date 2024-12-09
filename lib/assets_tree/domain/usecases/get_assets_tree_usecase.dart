@@ -27,7 +27,11 @@ class GetAssetsTreeUsecase {
       for (var asset in assets) asset.id: asset..children = [],
     };
 
-    final root = LocationNodeModel(id: 'root_id', name: 'Root');
+    final root = LocationNodeModel(
+      id: 'root_id',
+      name: 'Root',
+      children: List.empty(),
+    );
 
     for (var location in locations) {
       if (location.parentId != null) {
