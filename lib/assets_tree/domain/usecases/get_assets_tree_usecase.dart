@@ -30,7 +30,7 @@ class GetAssetsTreeUsecase {
     final root = LocationNodeModel(
       id: 'root_id',
       name: 'Root',
-      children: List.empty(),
+      children: [],
     );
 
     for (var location in locations) {

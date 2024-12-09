@@ -52,145 +52,147 @@ class _AssetsTreePageState extends State<AssetsTreePage> {
           icon: SvgPicture.asset(SvgIcons.arrowBack),
         ),
       ),
-      body: Column(
-        children: [
-          const SizedBox(height: 16),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: SizedBox(
-              height: 32,
-              child: TextFormField(
-                style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w400,
-                ),
-                decoration: InputDecoration(
-                  contentPadding: EdgeInsets.zero,
-                  hintText: 'Buscar Ativo ou Local',
-                  hintStyle: const TextStyle(
-                    fontWeight: FontWeight.w400,
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            const SizedBox(height: 16),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: SizedBox(
+                height: 32,
+                child: TextFormField(
+                  style: const TextStyle(
                     fontSize: 14,
-                    color: Color(0xFF8E98A3),
+                    fontWeight: FontWeight.w400,
                   ),
-                  prefixIcon: IconButton(
-                    onPressed: () {},
-                    padding: EdgeInsets.zero,
-                    icon: SvgPicture.asset(
-                      SvgIcons.search,
-                      width: 18,
+                  decoration: InputDecoration(
+                    contentPadding: EdgeInsets.zero,
+                    hintText: 'Buscar Ativo ou Local',
+                    hintStyle: const TextStyle(
+                      fontWeight: FontWeight.w400,
+                      fontSize: 14,
+                      color: Color(0xFF8E98A3),
                     ),
-                  ),
-                  filled: true,
-                  fillColor: const Color(0xFFEAEFF3),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(4.0),
-                    borderSide: BorderSide.none,
+                    prefixIcon: IconButton(
+                      onPressed: () {},
+                      padding: EdgeInsets.zero,
+                      icon: SvgPicture.asset(
+                        SvgIcons.search,
+                        width: 18,
+                      ),
+                    ),
+                    filled: true,
+                    fillColor: const Color(0xFFEAEFF3),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(4.0),
+                      borderSide: BorderSide.none,
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-          const SizedBox(height: 8),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Row(
-              children: [
-                SizedBox(
-                  height: 32,
-                  child: ElevatedButton(
-                    onPressed: () {},
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.transparent,
-                      shadowColor: Colors.transparent,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(6),
-                        side: const BorderSide(
-                          width: 1,
-                          color: Color(0xFFD8DFE6),
+            const SizedBox(height: 8),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Row(
+                children: [
+                  SizedBox(
+                    height: 32,
+                    child: ElevatedButton(
+                      onPressed: () {},
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.transparent,
+                        shadowColor: Colors.transparent,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(6),
+                          side: const BorderSide(
+                            width: 1,
+                            color: Color(0xFFD8DFE6),
+                          ),
                         ),
                       ),
-                    ),
-                    child: Row(
-                      children: [
-                        SvgPicture.asset(
-                          SvgIcons.bolt,
-                          theme: const SvgTheme(
-                            currentColor: Color(0xFF77818C),
+                      child: Row(
+                        children: [
+                          SvgPicture.asset(
+                            SvgIcons.bolt,
+                            theme: const SvgTheme(
+                              currentColor: Color(0xFF77818C),
+                            ),
                           ),
-                        ),
-                        const SizedBox(width: 10),
-                        const Text(
-                          'Sensor de Energia',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 14,
-                            color: Color(0xFF77818C),
+                          const SizedBox(width: 10),
+                          const Text(
+                            'Sensor de Energia',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 14,
+                              color: Color(0xFF77818C),
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 10),
-                SizedBox(
-                  height: 32,
-                  child: ElevatedButton(
-                    onPressed: () {},
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.transparent,
-                      shadowColor: Colors.transparent,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(6),
-                        side: const BorderSide(
-                          width: 1,
-                          color: Color(0xFFD8DFE6),
-                        ),
+                        ],
                       ),
                     ),
-                    child: Row(
-                      children: [
-                        SvgPicture.asset(
-                          SvgIcons.critical,
-                          theme: const SvgTheme(
-                            currentColor: Color(0xFF77818C),
+                  ),
+                  const SizedBox(width: 10),
+                  SizedBox(
+                    height: 32,
+                    child: ElevatedButton(
+                      onPressed: () {},
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.transparent,
+                        shadowColor: Colors.transparent,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(6),
+                          side: const BorderSide(
+                            width: 1,
+                            color: Color(0xFFD8DFE6),
                           ),
                         ),
-                        const SizedBox(width: 10),
-                        const Text(
-                          'Crítico',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 14,
-                            color: Color(0xFF77818C),
+                      ),
+                      child: Row(
+                        children: [
+                          SvgPicture.asset(
+                            SvgIcons.critical,
+                            theme: const SvgTheme(
+                              currentColor: Color(0xFF77818C),
+                            ),
                           ),
-                        ),
-                      ],
+                          const SizedBox(width: 10),
+                          const Text(
+                            'Crítico',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 14,
+                              color: Color(0xFF77818C),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          const SizedBox(height: 16),
-          const Divider(height: 0),
-          const SizedBox(height: 16),
-          BlocBuilder(
-            bloc: _bloc,
-            builder: (context, state) {
-              if (state is AssetsTreeLoading) {
-                return const Center(
-                  child: CircularProgressIndicator(
-                    color: Color(0xFF17192D),
-                  ),
-                );
-              }
-              if (state is AssetsTreeSuccess) {
-                return TreeBranch(treeNode: state.rootNode);
-              }
-              return const SizedBox.shrink();
-            },
-          ),
-        ],
+            const SizedBox(height: 16),
+            const Divider(height: 0),
+            const SizedBox(height: 16),
+            BlocBuilder(
+              bloc: _bloc,
+              builder: (context, state) {
+                if (state is AssetsTreeLoading) {
+                  return const Center(
+                    child: CircularProgressIndicator(
+                      color: Color(0xFF17192D),
+                    ),
+                  );
+                }
+                if (state is AssetsTreeSuccess) {
+                  return TreeBranch(treeNode: state.rootNode);
+                }
+                return const SizedBox.shrink();
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
