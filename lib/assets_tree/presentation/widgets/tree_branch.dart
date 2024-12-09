@@ -22,6 +22,7 @@ class TreeBranch extends StatefulWidget {
 class _TreeBranchState extends State<TreeBranch> {
   late final TreeNodeModel _treeNode;
   late final String _leadingAssetPath;
+  String? _trailingAssetPath;
 
   @override
   void initState() {
@@ -31,6 +32,12 @@ class _TreeBranchState extends State<TreeBranch> {
     } else if (_treeNode is AssetNodeModel) {
       if (_treeNode.sensorType != null) {
         _leadingAssetPath = SvgIcons.component;
+        if (_treeNode.sensorType == 'energy' &&
+            _treeNode.status == 'operating') {
+          _trailingAssetPath = SvgIcons.greenBolt;
+        } else if (_treeNode.status == 'alert') {
+          _trailingAssetPath = SvgIcons.alertStatus;
+        }
       } else {
         _leadingAssetPath = SvgIcons.asset;
       }
@@ -43,6 +50,9 @@ class _TreeBranchState extends State<TreeBranch> {
     if (_treeNode.children.isEmpty) {
       return ListTile(
         leading: SvgPicture.asset(_leadingAssetPath),
+        trailing: _trailingAssetPath != null
+            ? SvgPicture.asset(_trailingAssetPath!)
+            : null,
         title: Text(
           _treeNode.name,
           style: const TextStyle(

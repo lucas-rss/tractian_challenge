@@ -1,4 +1,4 @@
-enum AssetFilterTypeEnum {
+enum StatusSensorFilterEnum {
   energySensor,
   criticalStatus,
 }

@@ -1,4 +1,5 @@
 class SvgIcons {
+  static const String alertStatus = 'assets/icons/alert_status.svg';
   static const String arrowBack = 'assets/icons/arrow_back.svg';
   static const String asset = 'assets/icons/asset.svg';
   static const String bolt = 'assets/icons/bolt.svg';

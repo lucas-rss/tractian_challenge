@@ -4,7 +4,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:tractian_test/assets_tree/presentation/pages/assets_tree/assets_tree_bloc.dart';
 import 'package:tractian_test/assets_tree/presentation/pages/assets_tree/assets_tree_state.dart';
 import 'package:tractian_test/assets_tree/presentation/widgets/tree_branch.dart';
-import 'package:tractian_test/assets_tree/utils/enums/asset_filter_type_enum.dart';
+import 'package:tractian_test/assets_tree/utils/enums/status_sensor_filter_enum.dart';
+import 'package:tractian_test/core/utils/debouncer.dart';
 import 'package:tractian_test/core/utils/svg_icons.dart';
 
 class AssetsTreePage extends StatefulWidget {
@@ -23,12 +24,23 @@ class AssetsTreePage extends StatefulWidget {
 
 class _AssetsTreePageState extends State<AssetsTreePage> {
   late final AssetsTreeBloc _bloc;
+  late final Debouncer _searchDebouncer;
 
   @override
   void initState() {
     _bloc = widget.bloc;
     _bloc.buildUnitAssetsTree(widget.companyId);
+    _searchDebouncer = Debouncer(
+      duration: const Duration(milliseconds: 500),
+    );
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _bloc.close();
+    _searchDebouncer.cancel();
+    super.dispose();
   }
 
   @override
@@ -62,6 +74,11 @@ class _AssetsTreePageState extends State<AssetsTreePage> {
               child: SizedBox(
                 height: 32,
                 child: TextFormField(
+                  onChanged: (value) {
+                    _searchDebouncer.run(() {
+                      _bloc.setSearchString(value);
+                    });
+                  },
                   style: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w400,
@@ -104,20 +121,20 @@ class _AssetsTreePageState extends State<AssetsTreePage> {
                         height: 32,
                         child: ElevatedButton(
                           onPressed: () {
-                            _bloc.setEnergyOrCriticalFilter(
-                              AssetFilterTypeEnum.energySensor,
+                            _bloc.setStatusSensorFilter(
+                              StatusSensorFilterEnum.energySensor,
                             );
                           },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: state.filterType ==
-                                    AssetFilterTypeEnum.energySensor
+                            backgroundColor: state.statusSensorFilter ==
+                                    StatusSensorFilterEnum.energySensor
                                 ? const Color(0xFF2188FF)
                                 : Colors.transparent,
                             shadowColor: Colors.transparent,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(6),
-                              side: state.filterType ==
-                                      AssetFilterTypeEnum.energySensor
+                              side: state.statusSensorFilter ==
+                                      StatusSensorFilterEnum.energySensor
                                   ? BorderSide.none
                                   : const BorderSide(
                                       width: 1,
@@ -130,8 +147,8 @@ class _AssetsTreePageState extends State<AssetsTreePage> {
                               SvgPicture.asset(
                                 SvgIcons.bolt,
                                 colorFilter: ColorFilter.mode(
-                                  state.filterType ==
-                                          AssetFilterTypeEnum.energySensor
+                                  state.statusSensorFilter ==
+                                          StatusSensorFilterEnum.energySensor
                                       ? Colors.white
                                       : const Color(0xFF77818C),
                                   BlendMode.srcIn,
@@ -143,8 +160,8 @@ class _AssetsTreePageState extends State<AssetsTreePage> {
                                 style: TextStyle(
                                   fontWeight: FontWeight.w500,
                                   fontSize: 14,
-                                  color: state.filterType ==
-                                          AssetFilterTypeEnum.energySensor
+                                  color: state.statusSensorFilter ==
+                                          StatusSensorFilterEnum.energySensor
                                       ? Colors.white
                                       : const Color(0xFF77818C),
                                 ),
@@ -158,20 +175,20 @@ class _AssetsTreePageState extends State<AssetsTreePage> {
                         height: 32,
                         child: ElevatedButton(
                           onPressed: () {
-                            _bloc.setEnergyOrCriticalFilter(
-                              AssetFilterTypeEnum.criticalStatus,
+                            _bloc.setStatusSensorFilter(
+                              StatusSensorFilterEnum.criticalStatus,
                             );
                           },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: state.filterType ==
-                                    AssetFilterTypeEnum.criticalStatus
+                            backgroundColor: state.statusSensorFilter ==
+                                    StatusSensorFilterEnum.criticalStatus
                                 ? const Color(0xFF2188FF)
                                 : Colors.transparent,
                             shadowColor: Colors.transparent,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(6),
-                              side: state.filterType ==
-                                      AssetFilterTypeEnum.criticalStatus
+                              side: state.statusSensorFilter ==
+                                      StatusSensorFilterEnum.criticalStatus
                                   ? BorderSide.none
                                   : const BorderSide(
                                       width: 1,
@@ -184,8 +201,8 @@ class _AssetsTreePageState extends State<AssetsTreePage> {
                               SvgPicture.asset(
                                 SvgIcons.critical,
                                 colorFilter: ColorFilter.mode(
-                                  state.filterType ==
-                                          AssetFilterTypeEnum.criticalStatus
+                                  state.statusSensorFilter ==
+                                          StatusSensorFilterEnum.criticalStatus
                                       ? Colors.white
                                       : const Color(0xFF77818C),
                                   BlendMode.srcIn,
@@ -197,8 +214,8 @@ class _AssetsTreePageState extends State<AssetsTreePage> {
                                 style: TextStyle(
                                   fontWeight: FontWeight.w500,
                                   fontSize: 14,
-                                  color: state.filterType ==
-                                          AssetFilterTypeEnum.criticalStatus
+                                  color: state.statusSensorFilter ==
+                                          StatusSensorFilterEnum.criticalStatus
                                       ? Colors.white
                                       : const Color(0xFF77818C),
                                 ),
@@ -227,14 +244,38 @@ class _AssetsTreePageState extends State<AssetsTreePage> {
                   );
                 }
                 if (assetsState is AssetsTreeSuccess) {
+                  if (assetsState.initialRootNode == null) {
+                    return const Center(
+                      child: Text(
+                        'No assets or locations found.',
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Color(0xFF17192D),
+                        ),
+                      ),
+                    );
+                  }
+
                   final keyLabel = assetsState.hashCode.toString();
                   return TreeBranch(
-                    key:  Key(keyLabel),
+                    key: Key(keyLabel),
                     treeNode: assetsState.initialRootNode!,
                   );
                 }
                 if (assetsState is AssetsTreeFiltered) {
                   final keyLabel = assetsState.hashCode.toString();
+                  if (assetsState.filteredRootNode == null) {
+                    return const Center(
+                      child: Text(
+                        'No assets or locations found.',
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Color(0xFF17192D),
+                        ),
+                      ),
+                    );
+                  }
+
                   return TreeBranch(
                     key: Key(keyLabel),
                     treeNode: assetsState.filteredRootNode!,
