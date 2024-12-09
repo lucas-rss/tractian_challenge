@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:tractian_test/assets_tree/presentation/pages/assets_tree/assets_tree_bloc.dart';
+import 'package:tractian_test/assets_tree/presentation/pages/assets_tree/assets_tree_state.dart';
+import 'package:tractian_test/assets_tree/presentation/widgets/tree_branch.dart';
 import 'package:tractian_test/core/utils/svg_icons.dart';
 
 class AssetsTreePage extends StatefulWidget {
@@ -170,6 +173,23 @@ class _AssetsTreePageState extends State<AssetsTreePage> {
           ),
           const SizedBox(height: 16),
           const Divider(height: 0),
+          const SizedBox(height: 16),
+          BlocBuilder(
+            bloc: _bloc,
+            builder: (context, state) {
+              if (state is AssetsTreeLoading) {
+                return const Center(
+                  child: CircularProgressIndicator(
+                    color: Color(0xFF17192D),
+                  ),
+                );
+              }
+              if (state is AssetsTreeSuccess) {
+                return TreeBranch(treeNode: state.rootNode);
+              }
+              return const SizedBox.shrink();
+            },
+          ),
         ],
       ),
     );

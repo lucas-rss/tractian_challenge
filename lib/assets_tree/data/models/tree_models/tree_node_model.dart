@@ -1,9 +1,9 @@
 abstract class TreeNodeModel {
   final String id;
   final String name;
-  final List<TreeNodeModel> children;
+  List<TreeNodeModel> children;
 
-  const TreeNodeModel({
+  TreeNodeModel({
     required this.id,
     required this.name,
     required this.children,

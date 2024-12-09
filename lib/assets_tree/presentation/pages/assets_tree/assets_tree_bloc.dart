@@ -11,6 +11,8 @@ class AssetsTreeBloc extends Cubit<AssetsTreeState> {
         super(AssetsTreeInitial());
 
   Future<void> buildUnitAssetsTree(String companyId) async {
-    await _getAssetsTreeUsecase(companyId);
+    emit(AssetsTreeLoading());
+    final rootNode = await _getAssetsTreeUsecase(companyId);
+    emit(AssetsTreeSuccess(rootNode: rootNode));
   }
 }
